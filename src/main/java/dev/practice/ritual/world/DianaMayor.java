@@ -51,7 +51,8 @@ public final class DianaMayor implements Listener {
             m.setPersistent(true);
             try {
                 m.setImmovable(true);
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
             m.customName(Component.text("Diana", NamedTextColor.LIGHT_PURPLE)
                     .decoration(TextDecoration.ITALIC, false));
@@ -86,10 +87,12 @@ public final class DianaMayor implements Listener {
             profile.getTextures().setSkin(
                     java.net.URI.create("http://textures.minecraft.net/texture/" + hash).toURL());
             mannequin.setProfile(io.papermc.paper.datacomponent.item.ResolvableProfile.resolvableProfile(profile));
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
             try {
                 mannequin.setProfile(Mannequin.defaultProfile());
-            } catch (Throwable ignored2) {
+            } catch (Throwable t2) {
+                t2.printStackTrace();
             }
         }
     }

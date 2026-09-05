@@ -264,19 +264,19 @@ public final class DropTables {
     }
 
     private static String fmtPct(double pct) {
-        if (pct >= 10) return String.format(Locale.US, "%.1f", pct);
-        if (pct >= 1) return String.format(Locale.US, "%.2f", pct);
-        if (pct >= 0.01) return String.format(Locale.US, "%.3f", pct);
-        return String.format(Locale.US, "%.4f", pct);
+        if (pct >= 10) return String.format(Locale.ROOT, "%.1f", pct);
+        if (pct >= 1) return String.format(Locale.ROOT, "%.2f", pct);
+        if (pct >= 0.01) return String.format(Locale.ROOT, "%.3f", pct);
+        return String.format(Locale.ROOT, "%.4f", pct);
     }
 
     private static String fmtMult(double m) {
-        return String.format(Locale.US, "%.2f", m);
+        return String.format(Locale.ROOT, "%.2f", m);
     }
 
     private static String fmtMf(double mf) {
-        if (Math.abs(mf - Math.rint(mf)) < 1e-6) return String.format(Locale.US, "%.0f", mf);
-        return String.format(Locale.US, "%.1f", mf);
+        if (Math.abs(mf - Math.rint(mf)) < 1e-6) return String.format(Locale.ROOT, "%.0f", mf);
+        return String.format(Locale.ROOT, "%.1f", mf);
     }
 
     public static void giveSilent(Player player, String id, int amount) {

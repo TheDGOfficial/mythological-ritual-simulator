@@ -1,0 +1,4 @@
+# Exclude machine specific data and caches from Git.
+run/
+build/
+.gradle

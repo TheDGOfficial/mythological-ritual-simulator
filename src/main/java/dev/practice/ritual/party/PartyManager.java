@@ -6,8 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+import io.papermc.paper.event.player.AsyncChatEvent;
+
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -118,8 +121,8 @@ public final class PartyManager implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
-    public void onChat(AsyncPlayerChatEvent event) {
-        String raw = event.getMessage();
+    public void onChat(AsyncChatEvent event) {
+        String raw = PlainTextComponentSerializer.plainText().serialize(event.message());
         if (raw == null) return;
         String body = stripPc(raw);
         if (body == null) {
@@ -128,18 +131,18 @@ public final class PartyManager implements Listener {
             if (plain.startsWith("party ") && plain.contains(">")) {
                 event.setCancelled(true);
                 Party p = partyOf(event.getPlayer().getUniqueId());
-                event.getRecipients().clear();
+                event.viewers().clear();
                 if (p != null) {
                     for (UUID id : p.members) {
                         Player m = Bukkit.getPlayer(id);
-                        if (m != null && m.isOnline()) event.getRecipients().add(m);
+                        if (m != null && m.isOnline()) event.viewers().add(m);
                     }
                 }
             }
             return;
         }
         event.setCancelled(true);
-        event.getRecipients().clear();
+        event.viewers().clear();
         Player from = event.getPlayer();
         plugin.getServer().getScheduler().runTask(plugin, () -> chat(from, body));
     }

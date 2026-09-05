@@ -78,6 +78,6 @@ public final class SellPrices {
     }
 
     public static String coins(long n) {
-        return String.format(Locale.US, "%,d", n);
+        return String.format(Locale.ROOT, "%,d", n);
     }
 }

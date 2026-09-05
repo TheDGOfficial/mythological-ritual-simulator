@@ -68,7 +68,7 @@ practice-rates: false
 rate-multiplier: 1
 elusive-weight-multiplier: 1.0
 default-griffin: MYTHIC
-magic-find: 390
+magic-find: 500
 tracking: 0
 gaia-hit-chance: 0.333333
 

@@ -42,7 +42,8 @@ public final class SkyblockBoard implements Listener {
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         try {
             obj.numberFormat(NumberFormat.blank());
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
         obj.getScore(" §7Late Summer 27th").setScore(10);
         obj.getScore("§f ").setScore(9);
@@ -75,7 +76,7 @@ public final class SkyblockBoard implements Listener {
     }
 
     private static String compact(double n) {
-        return String.format(java.util.Locale.US, "%,.0f", n);
+        return String.format(java.util.Locale.ROOT, "%,.0f", n);
     }
 
     @EventHandler
