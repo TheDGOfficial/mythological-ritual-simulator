@@ -2,7 +2,7 @@
 
 Paper **26.2** plugin. Local Hypixel SkyBlock Mythological Ritual (Mayor Diana) practice sandbox, wired for **SBO** (vanilla client + debug toggles “always on SkyBlock” / “always Diana”).
 
-Current build: **2.2.0**. Java 25, Gradle 9.7.1+. To run: `gradlew.bat runServer` which will run a development server with the plugin in it. You need to accept EULA and unzip world.zip to the run/ folder. To build: `gradlew.bat build` → `build/libs/RitualPractice.jar`. Drop it in `plugins/`.
+Current build: **2.2.0**. Java 26, Gradle 9.7.1+. To run: `gradlew.bat runServer` which will run a development server with the plugin in it. You need to accept EULA and unzip world.zip to the run/ folder. To build: `gradlew.bat build` → `build/libs/RitualPractice.jar`. Drop it in `plugins/`.
 
 Join `world`, `/ritual give`, `/ritual start`. Echo with the spade (RMB, 10 mana). Break grass to dig (1s cooldown).
 
