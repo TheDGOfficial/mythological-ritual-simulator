@@ -8,7 +8,7 @@ public enum MythoKind {
             new double[]{4_000, 15_000, 100_000, 350_000, 1_000_000, 1_750_000},
             new double[]{40, 125, 500, 1_250, 2_750, 4_000},
             2.0, 1000, Material.IRON_SWORD, "Hilt of Revelations", "HILT"),
-    LYNX("Siamese Lynxes", EntityType.WOLF, false, false,
+    LYNX("Siamese Lynxes", EntityType.CAT, false, false,
             new double[]{2_500, 12_500, 75_000, 250_000, 750_000, 1_250_000},
             new double[]{30, 75, 350, 1_000, 2_250, 3_000},
             0.4, 1000, Material.TOTEM_OF_UNDYING, "Crochet Tiger Plushie", "PLUSHIE"),

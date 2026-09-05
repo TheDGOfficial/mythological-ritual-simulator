@@ -106,7 +106,7 @@ public final class SetStatCommand implements CommandExecutor, TabCompleter {
     }
 
     public static String fmt(double v) {
-        if (Math.abs(v - Math.rint(v)) < 1e-9) return String.format(Locale.US, "%,.0f", v);
-        return String.format(Locale.US, "%,.3f", v).replaceAll("0+$", "").replaceAll("\\.$", "");
+        if (Math.abs(v - Math.rint(v)) < 1e-9) return String.format(Locale.ROOT, "%,.0f", v);
+        return String.format(Locale.ROOT, "%,.3f", v).replaceAll("0+$", "").replaceAll("\\.$", "");
     }
 }

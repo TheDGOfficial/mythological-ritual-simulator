@@ -10,7 +10,7 @@ public final class PlayerStats {
     public double maxMana = 1000;
     public double magicFind = 400;
     public double tracking = 50;
-    public double damage = 1_000_000;
+    public double damage = 8_500_000;
     public long purse = 0;
     public boolean breakBlocks = false;
     public long lastMelon;

@@ -43,7 +43,7 @@ public final class RitualCommand implements CommandExecutor, TabCompleter {
             }
             case "give", "kit" -> {
                 plugin.rituals().giveKit(player);
-                player.sendMessage("§aGave spade, Aspect Of The Void, Daedalus Blade, Healing Melon, Mana Fruit, and SkyBlock Menu.");
+                player.sendMessage("§aGave spade, Aspect of the Void, Daedalus Blade, Healing Melon, Mana Fruit, and SkyBlock Menu.");
             }
             case "griffin" -> {
                 mgr.session(player).griffin = GriffinRarity.MYTHIC;

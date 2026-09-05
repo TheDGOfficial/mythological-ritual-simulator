@@ -15,15 +15,23 @@ import dev.practice.ritual.ritual.ParticleTask;
 import dev.practice.ritual.ritual.RitualManager;
 import dev.practice.ritual.scoreboard.SkyblockBoard;
 import dev.practice.ritual.world.WorldGuardListener;
-import org.bukkit.GameRule;
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import org.bukkit.GameRules;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class RitualPlugin extends JavaPlugin implements Listener {
@@ -54,12 +62,11 @@ public final class RitualPlugin extends JavaPlugin implements Listener {
 
         World world = getServer().getWorld(getConfig().getString("world", "world"));
         if (world != null && !getConfig().getBoolean("natural-regeneration", false)) {
-            world.setGameRule(GameRule.NATURAL_REGENERATION, false);
+            world.setGameRule(GameRules.NATURAL_HEALTH_REGENERATION, false);
         }
 
         RitualCommand ritual = new RitualCommand(this);
-        getCommand("ritual").setExecutor(ritual);
-        getCommand("ritual").setTabCompleter(ritual);
+        bind("ritual", ritual, ritual);
         this.warps = new WarpCommand(this);
         bind("warp", warps, warps);
         bind("hubwarp", warps, warps);
@@ -74,10 +81,7 @@ public final class RitualPlugin extends JavaPlugin implements Listener {
         MiscCommands misc = new MiscCommands(this);
         for (String c : new String[]{"p", "party", "pc", "trades", "togglebreak",
                 "togglefakelag", "togglechance", "compactor", "purse", "items", "anvil"}) {
-            if (getCommand(c) != null) {
-                getCommand(c).setExecutor(misc);
-                getCommand(c).setTabCompleter(misc);
-            }
+            bind(c, misc, misc);
         }
 
         getServer().getPluginManager().registerEvents(new ItemListener(this), this);
@@ -110,18 +114,32 @@ public final class RitualPlugin extends JavaPlugin implements Listener {
                 dev.practice.ritual.world.DianaMayor.spawn(this), 40L);
         try {
             dev.practice.ritual.mob.MythoSkins.folder(this);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
-        getLogger().info("RitualPractice 2.1.22 enabled.");
+        getLogger().info("RitualPractice 2.2.0 enabled.");
     }
 
-    private void bind(String name, org.bukkit.command.CommandExecutor exec, org.bukkit.command.TabCompleter tab) {
-        var cmd = getCommand(name);
-        if (cmd != null) {
-            cmd.setExecutor(exec);
-            cmd.setTabCompleter(tab);
-            cmd.setPermission(null);
-        }
+    private void bind(String name, CommandExecutor exec, TabCompleter tab) {
+        Command command = new Command(name) {
+            @Override
+            public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+                return false;
+            }
+        };
+
+        registerCommand(name, new BasicCommand() {
+            @Override
+            public void execute(CommandSourceStack source, String[] args) {
+                exec.onCommand(source.getSender(), command, name, args);
+            }
+
+            @Override
+            public Collection<String> suggest(CommandSourceStack source, String[] args) {
+                List<String> result = tab.onTabComplete(source.getSender(), command, name, args);
+                return result != null ? result : List.of();
+            }
+        });
     }
 
     private void bindStat(String name, SetStatCommand.Kind kind) {

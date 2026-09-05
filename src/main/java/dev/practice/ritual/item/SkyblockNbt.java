@@ -62,6 +62,7 @@ public final class SkyblockNbt {
             return copy;
         } catch (Throwable t) {
             RitualPlugin.get().getLogger().warning("Could not write custom_data.id=" + id + ": " + t);
+            t.printStackTrace();
             return bukkit;
         }
     }

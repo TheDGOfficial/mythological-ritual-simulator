@@ -90,7 +90,7 @@ public final class ItemFactory {
     public ItemStack aote() {
         ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
         item.editMeta(meta -> {
-            meta.displayName(legacy("§5Aspect Of The Void").decoration(TextDecoration.ITALIC, false));
+            meta.displayName(legacy("§5Aspect of the Void").decoration(TextDecoration.ITALIC, false));
             meta.lore(List.of(
                     noItalic(Component.text("Ultimate Wise V", NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD)),
                     noItalic(Component.text("Reduces the ability mana cost of this", NamedTextColor.GRAY)),
@@ -149,7 +149,7 @@ public final class ItemFactory {
             lore.add(Component.empty());
             lore.add(noItalic(Component.text("Looting " + roman(Math.max(1, level)), NamedTextColor.BLUE)));
             lore.add(noItalic(Component.text("Drop rates ×", NamedTextColor.GRAY)
-                    .append(Component.text(String.format(java.util.Locale.US, "%.2f", lootingMultiplier(level)), NamedTextColor.GREEN))
+                    .append(Component.text(String.format(java.util.Locale.ROOT, "%.2f", lootingMultiplier(level)), NamedTextColor.GREEN))
                     .append(Component.text("  (+0.15 per level, max 1.75)", NamedTextColor.DARK_GRAY))));
             if (level >= 5) {
                 lore.add(noItalic(Component.text("Maxed.", NamedTextColor.GREEN)));
@@ -244,7 +244,8 @@ public final class ItemFactory {
             mark(meta, KIND_SHURIKEN, "EXTREMELY_REAL_SHURIKEN");
             try {
                 meta.setMaxStackSize(64);
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
         });
         return item;
@@ -338,11 +339,6 @@ public final class ItemFactory {
             meta.lore(avariceLore(total[0]));
         });
         return total[0];
-    }
-
-    /** @deprecated use addAvarice after applying the 5x yourself */
-    public static long absorbAvarice(org.bukkit.entity.Player player, long amount) {
-        return addAvarice(player, amount * 5L);
     }
 
     public ItemStack menu() {

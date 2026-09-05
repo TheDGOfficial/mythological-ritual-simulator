@@ -1,8 +1,8 @@
 # RitualPractice
 
-Paper **1.21.11** plugin. Local Hypixel SkyBlock Mythological Ritual (Mayor Diana) practice sandbox, wired for **SBO** (vanilla client + debug toggles “always on SkyBlock” / “always Diana”).
+Paper **26.2** plugin. Local Hypixel SkyBlock Mythological Ritual (Mayor Diana) practice sandbox, wired for **SBO** (vanilla client + debug toggles “always on SkyBlock” / “always Diana”).
 
-Current build: **2.1.22**. Java 21, Maven 3.9+. To build: `mvn -q clean package -DskipTests` → `target/RitualPractice.jar`. Drop it in `plugins/`.
+Current build: **2.2.0**. Java 25, Gradle 9.7.1+. To run: `gradlew.bat runServer` which will run a development server with the plugin in it. You need to accept EULA and unzip world.zip to the run/ folder. To build: `gradlew.bat build` → `build/libs/RitualPractice.jar`. Drop it in `plugins/`.
 
 Join `world`, `/ritual give`, `/ritual start`. Echo with the spade (RMB, 10 mana). Break grass to dig (1s cooldown).
 
@@ -42,7 +42,7 @@ Griffin is locked **Mythic / Empyrean**. Burrows are client-sided, hard-capped a
 
 `taken = raw * 100 / (defense + 100)`
 
-Defaults: 5,000 HP, 1,000 def, 1,000 mana, 400 MF, 50 Tracking, 1,000,000 damage. Regen 5% HP /s (unless Manticore sting) and 4% mana /s. I-frames 0.25s. Melee reach 4 blocks. Only **Daedalus Blade** damages mytho mobs. Rare-mob hits splash everyone within 4 of the target. Slot 8 is the SkyBlock menu (locked).
+Defaults: 5,000 HP, 1,000 def, 1,000 mana, 500 MF, 50 Tracking, 1,000,000 damage. Regen 5% HP /s (unless Manticore sting) and 4% mana /s. I-frames 0.25s. Melee reach 4 blocks. Only **Daedalus Blade** damages mytho mobs. Rare-mob hits splash everyone within 4 of the target. Slot 8 is the SkyBlock menu (locked).
 
 Players cannot receive Wither. Fall / starve / drown / cram cancelled. Players can still void-die. Portals off. Food locked at 20.
 

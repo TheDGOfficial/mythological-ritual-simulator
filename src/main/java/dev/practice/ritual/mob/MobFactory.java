@@ -101,9 +101,6 @@ public final class MobFactory {
             ageable.setAdult();
             ageable.setAgeLock(true);
         }
-        if (entity instanceof Zombie zombie) {
-            zombie.setBaby(false);
-        }
 
         zero(entity, Attribute.ARMOR);
         zero(entity, Attribute.ARMOR_TOUGHNESS);
@@ -111,13 +108,15 @@ public final class MobFactory {
             if (entity.getAttribute(Attribute.KNOCKBACK_RESISTANCE) != null) {
                 entity.getAttribute(Attribute.KNOCKBACK_RESISTANCE).setBaseValue(kind == MythoKind.GAIA || kind == MythoKind.KING ? 1.0 : 0.6);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
         try {
             if (entity.getAttribute(Attribute.STEP_HEIGHT) != null) {
                 entity.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(1.25);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
         try {
             if (entity.getAttribute(Attribute.MOVEMENT_SPEED) != null) {
@@ -134,7 +133,8 @@ public final class MobFactory {
                 };
                 entity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(speed);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
         if (kind == MythoKind.HARPY) {
             entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, PotionEffect.INFINITE_DURATION, 0, true, false));
@@ -150,7 +150,8 @@ public final class MobFactory {
             mannequin.setImmovable(false);
             try {
                 mannequin.setDescription(null);
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
             applyMythoSkin(plugin, mannequin, kind);
             plugin.getServer().getScheduler().runTask(plugin, () -> applyMythoSkin(plugin, mannequin, kind));
@@ -184,7 +185,8 @@ public final class MobFactory {
             if (entity.getAttribute(attr) != null) {
                 entity.getAttribute(attr).setBaseValue(0);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
@@ -192,7 +194,8 @@ public final class MobFactory {
     public static void revealToOwner(RitualPlugin plugin, org.bukkit.entity.Entity entity, Player owner) {
         try {
             entity.setVisibleByDefault(true);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
@@ -219,7 +222,8 @@ public final class MobFactory {
         try {
             Entity e = plugin.getServer().getEntity(java.util.UUID.fromString(id));
             if (e != null) e.remove();
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException i) {
+            i.printStackTrace();
         }
         entity.getPersistentDataContainer().remove(plugin.getKey("hologram"));
     }
@@ -252,15 +256,15 @@ public final class MobFactory {
     public static String compact(double n) {
         if (n >= 1_000_000) {
             double m = n / 1_000_000.0;
-            if (Math.abs(m - Math.rint(m)) < 0.05) return String.format(Locale.US, "%.0fM", m);
-            return String.format(Locale.US, "%.1fM", m);
+            if (Math.abs(m - Math.rint(m)) < 0.05) return String.format(Locale.ROOT, "%.0fM", m);
+            return String.format(Locale.ROOT, "%.1fM", m);
         }
         if (n >= 10_000) {
             double k = n / 1_000.0;
-            if (Math.abs(k - Math.rint(k)) < 0.05) return String.format(Locale.US, "%.0fK", k);
-            return String.format(Locale.US, "%.1fK", k);
+            if (Math.abs(k - Math.rint(k)) < 0.05) return String.format(Locale.ROOT, "%.0fK", k);
+            return String.format(Locale.ROOT, "%.1fK", k);
         }
-        return String.format(Locale.US, "%,.0f", n);
+        return String.format(Locale.ROOT, "%,.0f", n);
     }
 
     private static int levelFor(MythoKind kind) {

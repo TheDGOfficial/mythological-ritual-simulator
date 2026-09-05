@@ -344,6 +344,7 @@ public final class ItemListener implements Listener {
             }
             return false;
         } catch (Throwable t) {
+            t.printStackTrace();
             return !b.isPassable();
         }
     }
@@ -428,6 +429,7 @@ public final class ItemListener implements Listener {
         try {
             e = plugin.getServer().getEntity(java.util.UUID.fromString(id));
         } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
             return;
         }
         if (!(e instanceof org.bukkit.entity.ArmorStand stand) || stand.isDead()) return;
@@ -443,7 +445,8 @@ public final class ItemListener implements Listener {
             Integer hits = victim.getPersistentDataContainer().get(plugin.getKey("king-shield"), PersistentDataType.INTEGER);
             stand.customName(dev.practice.ritual.mob.MobFactory.hologramName(
                     kind, griffin, hp == null ? 0 : hp, max == null ? 1 : max, hits == null ? -1 : hits, true));
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException i) {
+            i.printStackTrace();
         }
     }
 }
