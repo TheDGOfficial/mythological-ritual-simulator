@@ -181,6 +181,11 @@ public final class MobFactory {
             mob.setTarget(player);
             mob.setAware(true);
         }
+        if (kind == MythoKind.HUNTER) {
+            entity.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+            entity.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+            entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+        }
         if (kind == MythoKind.KING) {
             entity.getEquipment().setItemInMainHand(new ItemStack(Material.FISHING_ROD));
         }
