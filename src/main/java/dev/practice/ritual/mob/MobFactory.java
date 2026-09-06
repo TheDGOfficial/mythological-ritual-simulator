@@ -7,7 +7,11 @@ import dev.practice.ritual.ritual.MythoKind;
 import dev.practice.ritual.ritual.RitualManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ArmorStand;
@@ -20,6 +24,7 @@ import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.Sheep;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -59,6 +64,7 @@ public final class MobFactory {
         }
         if (kind == MythoKind.KING) {
             entity.getPersistentDataContainer().set(plugin.getKey("king-shield"), PersistentDataType.INTEGER, 75);
+            mountKing(plugin, entity);
         }
         return entity;
     }
@@ -77,7 +83,16 @@ public final class MobFactory {
         if (raw != null && LivingEntity.class.isAssignableFrom(raw)) {
             @SuppressWarnings("unchecked")
             Class<? extends LivingEntity> cls = (Class<? extends LivingEntity>) raw;
-            entity = loc.getWorld().spawn(loc, cls);
+            entity = loc.getWorld().spawn(loc, cls, e -> {
+                if (kind.rare()) {
+                    e.customName(
+                            LegacyComponentSerializer.legacySection().deserialize(kind.display)
+                    );
+                } else {
+                    e.customName(null);
+                }
+                e.setCustomNameVisible(false);
+            });
         } else {
             entity = (LivingEntity) loc.getWorld().spawnEntity(loc, type);
         }
@@ -87,7 +102,6 @@ public final class MobFactory {
     }
 
     private static void configure(RitualPlugin plugin, LivingEntity entity, MythoKind kind, Player player, GriffinRarity griffin, double hpScale) {
-        entity.customName(null);
         entity.setCustomNameVisible(false);
         entity.setRemoveWhenFarAway(false);
         entity.setPersistent(true);
@@ -167,6 +181,9 @@ public final class MobFactory {
             mob.setTarget(player);
             mob.setAware(true);
         }
+        if (kind == MythoKind.KING) {
+            entity.getEquipment().setItemInMainHand(new ItemStack(Material.FISHING_ROD));
+        }
 
         double hp = kind.health(griffin) * hpScale;
         var pdc = entity.getPersistentDataContainer();
@@ -178,6 +195,23 @@ public final class MobFactory {
         pdc.set(plugin.getKey("hitters"), PersistentDataType.STRING, player.getUniqueId().toString());
         pdc.set(plugin.getKey("spawn-at"), PersistentDataType.LONG, System.currentTimeMillis());
         pdc.set(plugin.getKey("dmg-mult"), PersistentDataType.DOUBLE, 1.0);
+    }
+
+    private static void mountKing(RitualPlugin plugin, LivingEntity king) {
+        Sheep sheep = king.getWorld().spawn(king.getLocation(), Sheep.class, entity -> {
+            entity.setColor(DyeColor.ORANGE);
+            entity.setInvulnerable(true);
+            entity.setCollidable(true);
+            entity.setSilent(false);
+        });
+
+        sheep.addPassenger(king);
+
+        king.getPersistentDataContainer().set(
+                plugin.getKey("king-sheep"),
+                PersistentDataType.STRING,
+                sheep.getUniqueId().toString()
+        );
     }
 
     private static void zero(LivingEntity entity, Attribute attr) {
@@ -243,8 +277,7 @@ public final class MobFactory {
     public static Component hologramName(MythoKind kind, GriffinRarity griffin, double hp, double max, int kingHits, boolean tagged) {
         String tag = tagged ? " §6✯" : "";
         if (kind == MythoKind.KING && kingHits > 0) {
-            return LegacyComponentSerializer.legacySection()
-                    .deserialize("§6King Minos §7- §5" + kingHits + " Hits" + tag);
+            return Component.text(kingHits + " Hits", NamedTextColor.DARK_PURPLE);
         }
         String shown = compact(hp);
         String cap = compact(max);

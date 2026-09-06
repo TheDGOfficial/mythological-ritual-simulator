@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -68,7 +69,22 @@ public final class MobAI extends BukkitRunnable {
                 continue;
             }
             if (s.pendingMobs <= 0) continue;
-            maybeRescueVoid(plugin, s.pendingMob);
+            LivingEntity rescueTarget = s.pendingMob;
+
+            if (s.pendingMob != null && !s.pendingMob.isDead()) {
+                Integer shield = s.pendingMob.getPersistentDataContainer().get(
+                        plugin.getKey("king-shield"),
+                        PersistentDataType.INTEGER
+                );
+
+                if (shield != null && shield > 0) {
+                    LivingEntity sheep = kingSheep(plugin, s.pendingMob);
+                    if (sheep != null && !sheep.isDead()) {
+                        rescueTarget = sheep;
+                    }
+                }
+            }
+            maybeRescueVoid(plugin, rescueTarget);
             if (s.pendingMob != null && !s.pendingMob.isDead()) {
                 String twinId = s.pendingMob.getPersistentDataContainer()
                         .get(plugin.getKey("lynx-twin"), PersistentDataType.STRING);
@@ -504,10 +520,36 @@ public final class MobAI extends BukkitRunnable {
         }, 30L);
     }
 
+    private static LivingEntity kingSheep(RitualPlugin plugin, LivingEntity king) {
+        String id = king.getPersistentDataContainer().get(
+                plugin.getKey("king-sheep"),
+                PersistentDataType.STRING
+        );
+
+        if (id == null) return null;
+
+        try {
+            Entity entity = plugin.getServer().getEntity(UUID.fromString(id));
+            return entity instanceof LivingEntity living ? living : null;
+        } catch (IllegalArgumentException ignored) {
+            return null;
+        }
+    }
+
     private void king(Player player, RitualManager.PlayerSession s, LivingEntity mob, long now) {
         Integer shield = mob.getPersistentDataContainer().get(plugin.getKey("king-shield"), PersistentDataType.INTEGER);
-        move(player, s, mob, now, shield != null && shield > 0 ? 0.18 : 0.24, true);
-        double dist = player.getLocation().distance(mob.getLocation());
+
+        LivingEntity movement = mob;
+
+        if (shield != null && shield > 0) {
+            LivingEntity sheep = kingSheep(plugin, mob);
+            if (sheep != null && !sheep.isDead()) {
+                movement = sheep;
+            }
+        }
+
+        move(player, s, movement, now, shield != null && shield > 0 ? 0.18 : 0.24, true);
+        double dist = player.getLocation().distance(movement.getLocation());
         // 150 true damage per hit (bypasses defense) + 2500 raw DPS while in melee range.
         // MobAI ticks every 2 ticks → 10 Hz, so 250 raw per tick = 2500 DPS.
         if (dist <= 3.6) {
@@ -523,7 +565,7 @@ public final class MobAI extends BukkitRunnable {
         Long lastRod = mob.getPersistentDataContainer().get(plugin.getKey("king-rod"), PersistentDataType.LONG);
         if (dist < 18 && dist > 3 && (lastRod == null || now - lastRod > 10000)) {
             mob.getPersistentDataContainer().set(plugin.getKey("king-rod"), PersistentDataType.LONG, now);
-            Vector pull = mob.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.55).setY(0.15);
+            Vector pull = movement.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.55).setY(0.15);
             player.setVelocity(pull);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 25, 2, true, false));
         }
@@ -532,7 +574,7 @@ public final class MobAI extends BukkitRunnable {
             Long lastBolt = mob.getPersistentDataContainer().get(plugin.getKey("king-bolt"), PersistentDataType.LONG);
             if (lastBolt == null || now - lastBolt > 8000) {
                 mob.getPersistentDataContainer().set(plugin.getKey("king-bolt"), PersistentDataType.LONG, now);
-                ironCrossLightning(player, mob, s, MythoKind.KING, 16L);
+                ironCrossLightning(player, movement, s, MythoKind.KING, 16L);
             }
         }
     }
@@ -925,6 +967,20 @@ public final class MobAI extends BukkitRunnable {
     }
 
     static void teleportToOwner(RitualPlugin plugin, Player owner, LivingEntity mob) {
+        LivingEntity teleportTarget = mob;
+
+        Integer shield = mob.getPersistentDataContainer().get(
+                plugin.getKey("king-shield"),
+                PersistentDataType.INTEGER
+        );
+
+        if (shield != null && shield > 0) {
+            LivingEntity sheep = kingSheep(plugin, mob);
+            if (sheep != null && !sheep.isDead()) {
+                teleportTarget = sheep;
+            }
+        }
+
         Location dest = owner.getLocation().clone();
         Vector dir = dest.getDirection();
         dir.setY(0);
@@ -941,13 +997,16 @@ public final class MobAI extends BukkitRunnable {
             dest.setY(Math.floor(owner.getLocation().getY()));
             dest.setZ(Math.floor(owner.getLocation().getZ()) + 0.5);
         }
-        dest.setYaw(mob.getLocation().getYaw());
-        dest.setPitch(mob.getLocation().getPitch());
-        mob.teleport(dest);
-        mob.setVelocity(new Vector(0, 0, 0));
-        mob.setFallDistance(0);
+
+        dest.setYaw(teleportTarget.getLocation().getYaw());
+        dest.setPitch(teleportTarget.getLocation().getPitch());
+        teleportTarget.teleport(dest);
+        teleportTarget.setVelocity(new Vector(0, 0, 0));
+        teleportTarget.setFallDistance(0);
+
         String holId = mob.getPersistentDataContainer().get(plugin.getKey("hologram"), PersistentDataType.STRING);
         if (holId == null) return;
+
         try {
             Entity h = plugin.getServer().getEntity(java.util.UUID.fromString(holId));
             if (h != null && !h.isDead()) {
