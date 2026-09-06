@@ -472,9 +472,11 @@ public final class MobAI extends BukkitRunnable {
 
     private void manticore(Player player, RitualManager.PlayerSession s, LivingEntity mob, long now) {
         move(player, s, mob, now, 0.40, true);
-        Long spawn = mob.getPersistentDataContainer().get(plugin.getKey("spawn-at"), PersistentDataType.LONG);
-        if (spawn != null && now - spawn < 2000) return;
         melee(player, s, mob, MythoKind.MANTICORE, 2.8, 500, now, 0.4, false);
+
+        Long spawn = mob.getPersistentDataContainer().get(plugin.getKey("spawn-at"), PersistentDataType.LONG);
+        if (spawn != null && now - spawn < 30_000) return;
+
         Long last = mob.getPersistentDataContainer().get(plugin.getKey("sting"), PersistentDataType.LONG);
         if (last != null && now - last < 8000) {
             if (now - last < 2500) {
@@ -482,12 +484,18 @@ public final class MobAI extends BukkitRunnable {
             }
             return;
         }
+
         if (player.getLocation().distance(mob.getLocation()) > 22) return;
+
         mob.getPersistentDataContainer().set(plugin.getKey("sting"), PersistentDataType.LONG, now);
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (mob.isDead() || !player.isOnline()) return;
             for (int i = 0; i < 7; i++) {
-                plugin.getServer().getScheduler().runTaskLater(plugin, () -> shoot(mob, player, MythoKind.MANTICORE, 2.0, 0.8f), i);
+                plugin.getServer().getScheduler().runTaskLater(
+                        plugin,
+                        () -> shoot(mob, player, MythoKind.MANTICORE, 2.0, 0.8f),
+                        i
+                );
             }
         }, 30L);
     }
