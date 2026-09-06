@@ -34,9 +34,10 @@ public final class ForceSpawnCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length != 1) return List.of();
+        if (args.length > 1) return List.of();
 
-        String input = args[0].toLowerCase();
+        String input = args.length == 0 ? "" : args[0].toLowerCase();
+
         return Arrays.stream(MythoKind.values())
                 .map(Enum::name)
                 .filter(name -> name.toLowerCase().startsWith(input))
