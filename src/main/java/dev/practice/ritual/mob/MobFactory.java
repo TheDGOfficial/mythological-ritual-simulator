@@ -88,6 +88,9 @@ public final class MobFactory {
                     e.customName(
                             LegacyComponentSerializer.legacySection().deserialize(kind.display)
                     );
+                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                        e.customName(null);
+                    }, 20);
                 } else {
                     e.customName(null);
                 }
