@@ -256,7 +256,11 @@ public final class MobAI extends BukkitRunnable {
             }
             loc.setYaw(mob.getLocation().getYaw());
             loc.setPitch(mob.getLocation().getPitch());
-            mob.teleport(loc);
+            try {
+                mob.teleport(loc);
+            } catch (final IllegalArgumentException i) {
+                i.printStackTrace();
+            }
             shootMaybe(mob, player, now);
             return;
         }
