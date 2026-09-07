@@ -386,7 +386,7 @@ public final class ItemFactory {
                     "§8Brewing Ingredient",
                     "§8Collection Item",
                     "",
-                    "§a§lUNCOMMON"
+                    "§a§lUNCOMMON ORE"
             }, true);
             case "ENCHANTED_ANCIENT_CLAW" -> new Skin("§5Enchanted Ancient Claw", new String[]{
                     "§7The refined claw of an ancient",
@@ -401,7 +401,7 @@ public final class ItemFactory {
                     "§8Brewing Ingredient",
                     "§8Collection Item",
                     "",
-                    "§9§lRARE"
+                    "§9§lRARE ORE"
             }, true);
             case "GRIFFIN_FEATHER" -> new Skin("§9Griffin Feather", new String[]{
                     "§7The feather of a mythical creature",
@@ -423,12 +423,15 @@ public final class ItemFactory {
                     "§5§lEPIC"
             }, false);
             case "MYTHOS_FRAGMENT" -> new Skin("§5Mythos Fragment", new String[]{
-                    "§7A shard of power left behind by a",
-                    "§7Mythological creature.",
+                    "§7Drops rarely from §eGriffin Burrows",
+                    "§7during Diana's §2Mythological Ritual§7.",
+                    "§8§oA splendid shard that was buried in",
+                    "§8§othe earth by someone a long, long",
+                    "§8§otime ago.",
                     "",
                     "§eRight-click to view recipes!",
                     "",
-                    "§5§lEPIC"
+                    "§5§lRARE"
             }, false);
             case "HILT" -> new Skin("§9Hilt of Revelations", new String[]{
                     "§7A rusted hilt, dropped by the Minos",
@@ -471,12 +474,20 @@ public final class ItemFactory {
                     "§5§lEPIC PET ITEM"
             }, false);
             case "CRETAN_URN" -> new Skin("§9Cretan Urn", new String[]{
-                    "§7An ornate urn recovered from the",
-                    "§7Cretan Bull.",
+                    "§8Consumed on use",
                     "",
-                    "§eRight-click to view recipes!",
+                    "§aPet Items §7can boost pets in many",
+                    "§7powerful ways! A pet can only hold",
+                    "§7one §aPet Item§7, but you can §eswap §7it at",
+                    "§7any time!",
+                    "§8The pet must be visible to apply the item!",
                     "",
-                    "§9§lRARE"
+                    "§7Grants §d+5 Pet Luck§7.",
+                    "",
+                    "§eRight-click on your summoned pet to",
+                    "§egive it this item!",
+                    "",
+                    "§5§lEPIC PET ITEM"
             }, false);
             case "SHELMET" -> new Skin("§9Dwarf Turtle Shelmet", new String[]{
                     "§8Consumed on use",
@@ -486,6 +497,10 @@ public final class ItemFactory {
                     "§7one §aPet Item§7, but you can §eswap §7it at",
                     "§7any time!",
                     "§8The pet must be visible to apply the item!",
+                    "",
+                    "§7Grants &f+10 True Defense §7and  knockback.",  
+                    "§7makes the pet's owner immune to",
+                    "§7knockback.",
                     "",
                     "§eRight-click on your summoned pet to",
                     "§egive it this item!",
@@ -500,6 +515,8 @@ public final class ItemFactory {
                     "§7one §aPet Item§7, but you can §eswap §7it at",
                     "§7any time!",
                     "§8The pet must be visible to apply the item!",
+                    "§7Increases the pet's §cStrength §7by",
+                    "§a80%§7.",
                     "",
                     "§eRight-click on your summoned pet to",
                     "§egive it this item!",
@@ -531,27 +548,40 @@ public final class ItemFactory {
                     "§5§lEPIC PET ITEM"
             }, false);
             case "BRAIN_FOOD" -> new Skin("§aBrain Food", new String[]{
-                    "§8Consumed on use",
+                    "§8Consumable",
                     "",
-                    "§aPet Items §7can boost pets in many",
-                    "§7powerful ways! A pet can only hold",
-                    "§7one §aPet Item§7, but you can §eswap §7it at",
-                    "§7any time!",
-                    "§8The pet must be visible to apply the item!",
+                    "§7Consume this item to permanently",
+                    "§7gain §d+1 Tracking§7.",
                     "",
-                    "§eRight-click on your summoned pet to",
-                    "§egive it this item!",
+                    "§7You can only consume §a5 §7of this item",
+                    "§7before the information overload",
+                    "§7starts to cause you physical pain."
                     "",
-                    "§a§lUNCOMMON PET ITEM"
+                    "§8§oIs it called brain food because it's",
+                    "§8§ogood for the brain, or because it's",
+                    "§8§omade of them?"
+                    "",
+                    "§5§lEPIC"
             }, false);
             case "CHIMERA" -> new Skin("§fEnchanted Book", new String[]{
+                    "§8Combinable in Anvil",
+                    ""
                     "§9Chimera I",
-                    "§7Copies the stats of your active",
-                    "§7pet.",
+                    "§7Copies §a20% §7of your active",
+                    "§7pet's stats.",
                     "",
-                    "§eRight-click to view recipes!",
+                    "§cYou can only name 1 Ultimate",
+                    "§cEnchantment on an item!",
                     "",
-                    "§9§lRARE"
+                    "§6Source:",
+                    "§aI-V: §7Mythological Event",
+                    "",
+                    "§6Applied To:",
+                    "§7- §fSword",
+                    "§7- §fFishing Weapon",
+                    "§7- §fLongsword",
+                    "§7- §fGauntlet",
+                    "§f§lCOMMON"
             }, true);
             case "STINGER" -> new Skin("§6Fateful Stinger", new String[]{
                     "§8Combinable in Anvil",
@@ -575,13 +605,16 @@ public final class ItemFactory {
                     "",
                     "§6§lLEGENDARY"
             }, false);
-            case "SHIMMERING_WOOL" -> new Skin("§dShimmering Wool", new String[]{
-                    "§7Wool shorn from King Minos' golden",
-                    "§7fleece. It still hums with greed.",
+            case "SHIMMERING_WOOL" -> new Skin("§6Shimmering Wool", new String[]{
+                    "§7A splendid wool found nowhere else;",
+                    "§7it caresses your fingers and",
+                    "§7exudes a unique warmth the likes of",
+                    "§7which you have never experienced",
+                    "§7before, and likely will never again.",
                     "",
                     "§eRight-click to view recipes!",
                     "",
-                    "§d§lMYTHIC"
+                    "§d§lLEGENDARY"
             }, false);
             case "CROWN" -> new Skin("§6Crown of Greed", new String[]{
                     "§7Health: §c+100",
