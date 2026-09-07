@@ -330,7 +330,7 @@ public final class MobFactory {
     }
 
     public static Component hologramName(MythoKind kind, GriffinRarity griffin, double hp, double max, int kingHits, boolean tagged) {
-        String tag = tagged ? " §6✯" : "";
+        String tag = tagged ? " §b✯" : "";
         if (kind == MythoKind.KING && kingHits > 0) {
             return Component.text(kingHits + " Hits", NamedTextColor.DARK_PURPLE);
         }
