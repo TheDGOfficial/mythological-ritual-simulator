@@ -246,7 +246,7 @@ public final class DropTables {
 
     public static void rareDrop(Player player, String id, String legacyName, double magicFind,
                                double lootMult, double basePercent, boolean lootShare) {
-        String mfBit = " §b(+§b" + fmtMf(magicFind) + " ✯ Magic Find)";
+        String mfBit = " §b(+§b" + fmtMf(magicFind) + " ⭐ Magic Find)";
         String msg = "§6§lRARE DROP! " + legacyName + mfBit;
         player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(msg));
         if (RitualPlugin.get().rituals().session(player).stats.chanceMessages) {
@@ -256,7 +256,7 @@ public final class DropTables {
                     ? "lootshare (no Looting)"
                     : (lootLvl <= 0 ? "no Looting" : "Looting " + ItemFactory.roman(lootLvl) + " (×" + fmtMult(lootMult) + ")");
             player.sendMessage("§7Chance: §e" + fmtPct(finalPct) + "% §8· base " + fmtPct(basePercent) + "% · "
-                    + lootBit + " · " + fmtMf(magicFind) + " ✯");
+                    + lootBit + " · " + fmtMf(magicFind) + " ⭐");
         }
         RitualSounds.rng(player, id.equals("CHIMERA") || id.equals("BRAIDED_GRIFFIN_FEATHER")
                 || id.equals("SHIMMERING_WOOL") || id.equals("MANTICORE"));
