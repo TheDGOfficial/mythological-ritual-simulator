@@ -581,6 +581,7 @@ public final class ItemFactory {
                     "§7- §fFishing Weapon",
                     "§7- §fLongsword",
                     "§7- §fGauntlet",
+                    "",
                     "§f§lCOMMON"
             }, true);
             case "STINGER" -> new Skin("§6Fateful Stinger", new String[]{
@@ -614,7 +615,7 @@ public final class ItemFactory {
                     "",
                     "§eRight-click to view recipes!",
                     "",
-                    "§d§lLEGENDARY"
+                    "§6§lLEGENDARY"
             }, false);
             case "CROWN" -> new Skin("§6Crown of Greed", new String[]{
                     "§7Health: §c+100",
