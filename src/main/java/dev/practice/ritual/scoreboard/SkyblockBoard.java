@@ -16,6 +16,7 @@ import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 //honestly not sure why i put this here, first thing i clicked on with the import already in it i guess
