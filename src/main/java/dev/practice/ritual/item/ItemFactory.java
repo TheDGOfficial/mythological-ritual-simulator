@@ -555,17 +555,17 @@ public final class ItemFactory {
                     "",
                     "§7You can only consume §a5 §7of this item",
                     "§7before the information overload",
-                    "§7starts to cause you physical pain."
+                    "§7starts to cause you physical pain.",
                     "",
                     "§8§oIs it called brain food because it's",
                     "§8§ogood for the brain, or because it's",
-                    "§8§omade of them?"
+                    "§8§omade of them?",
                     "",
                     "§5§lEPIC"
             }, false);
             case "CHIMERA" -> new Skin("§fEnchanted Book", new String[]{
                     "§8Combinable in Anvil",
-                    ""
+                    "",
                     "§9Chimera I",
                     "§7Copies §a20% §7of your active",
                     "§7pet's stats.",
