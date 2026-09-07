@@ -23,7 +23,7 @@ public final class SellPrices {
         add("REMEDIES", "Antique Remedies", Material.GLISTERING_MELON_SLICE, 250_000);
         add("MYTHOS_FRAGMENT", "Mythos Fragment", Material.PRISMARINE_SHARD, 25_000);
         add("HILT", "Hilt of Revelations", Material.IRON_SWORD, 150_000);
-        add("SHIMMERING_WOOL", "Shimmering Wool", Material.WHITE_WOOL, 50_000_000);
+        add("SHIMMERING_WOOL", "Shimmering Wool", Material.YELLOW_WOOL, 50_000_000);
         add("CROWN", "Crown of Greed", Material.GOLDEN_HELMET, 1_000_000);
         add("DAEDALUS_STICK", "Daedalus Stick", Material.STICK, 2_500_000);
         add("MINOS_RELIC", "Minos Relic", Material.PRISMARINE_CRYSTALS, 30_000_000);
