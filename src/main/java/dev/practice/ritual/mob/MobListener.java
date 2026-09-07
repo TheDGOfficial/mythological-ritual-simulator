@@ -238,6 +238,7 @@ public final class MobListener implements Listener {
                 } catch (IllegalArgumentException ignored) {
                 }
             }, 12L);
+            MobFactory.removeNameHider(plugin, victim);
         }
         MythoKind kind = MythoKind.valueOf(kindName);
 
@@ -376,6 +377,7 @@ public final class MobListener implements Listener {
                 }
             }
         }, 12L);
+        MobFactory.removeNameHider(plugin, living);
         if (Boolean.TRUE.equals(living.getPersistentDataContainer().get(plugin.getKey("resolved"), PersistentDataType.BOOLEAN))) {
             return;
         }

@@ -30,6 +30,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Locale;
+import java.util.UUID;
 
 public final class MobFactory {
 
@@ -88,9 +89,7 @@ public final class MobFactory {
                     e.customName(
                             LegacyComponentSerializer.legacySection().deserialize(kind.display)
                     );
-                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                        e.customName(null);
-                    }, 20);
+                    attachNameHider(plugin, e);
                 } else {
                     e.customName(null);
                 }
@@ -102,6 +101,42 @@ public final class MobFactory {
         configure(plugin, entity, kind, player, griffin, hpScale);
         spawnHologram(plugin, entity, kind, griffin, kind.health(griffin) * hpScale, player);
         return entity;
+    }
+
+    private static void attachNameHider(RitualPlugin plugin, LivingEntity entity) {
+        ArmorStand hider = entity.getWorld().spawn(entity.getLocation(), ArmorStand.class, h -> {
+            h.setInvisible(true);
+            h.setMarker(true);
+            h.setGravity(false);
+            h.setInvulnerable(true);
+            h.setCollidable(false);
+        });
+
+        entity.addPassenger(hider);
+
+        entity.getPersistentDataContainer().set(
+                plugin.getKey("name-hider"),
+                PersistentDataType.STRING,
+                hider.getUniqueId().toString()
+        );
+    }
+
+    public static void removeNameHider(RitualPlugin plugin, LivingEntity entity) {
+        String id = entity.getPersistentDataContainer().get(
+                plugin.getKey("name-hider"),
+                PersistentDataType.STRING
+        );
+        if (id == null) return;
+
+        try {
+            Entity hider = plugin.getServer().getEntity(java.util.UUID.fromString(id));
+            if (hider != null) {
+                hider.remove();
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        entity.getPersistentDataContainer().remove(plugin.getKey("name-hider"));
     }
 
     private static void configure(RitualPlugin plugin, LivingEntity entity, MythoKind kind, Player player, GriffinRarity griffin, double hpScale) {
@@ -260,14 +295,26 @@ public final class MobFactory {
 
     public static void removeHologram(RitualPlugin plugin, LivingEntity entity) {
         String id = entity.getPersistentDataContainer().get(plugin.getKey("hologram"), PersistentDataType.STRING);
-        if (id == null) return;
-        try {
-            Entity e = plugin.getServer().getEntity(java.util.UUID.fromString(id));
-            if (e != null) e.remove();
-        } catch (IllegalArgumentException i) {
-            i.printStackTrace();
+        if (id != null) {
+            try {
+                Entity e = plugin.getServer().getEntity(UUID.fromString(id));
+                if (e != null) e.remove();
+            } catch (IllegalArgumentException i) {
+                i.printStackTrace();
+            }
+            entity.getPersistentDataContainer().remove(plugin.getKey("hologram"));
         }
-        entity.getPersistentDataContainer().remove(plugin.getKey("hologram"));
+
+        String hiderId = entity.getPersistentDataContainer().get(plugin.getKey("name-hider"), PersistentDataType.STRING);
+        if (hiderId != null) {
+            try {
+                Entity e = plugin.getServer().getEntity(UUID.fromString(hiderId));
+                if (e != null) e.remove();
+            } catch (IllegalArgumentException i) {
+                i.printStackTrace();
+            }
+            entity.getPersistentDataContainer().remove(plugin.getKey("name-hider"));
+        }
     }
 
     public static double hologramOffset(MythoKind kind) {
