@@ -66,6 +66,7 @@ public final class MobListener implements Listener {
                     Double hp = victim.getPersistentDataContainer().get(plugin.getKey("sb-hp"), PersistentDataType.DOUBLE);
                     Double max = victim.getPersistentDataContainer().get(plugin.getKey("sb-max"), PersistentDataType.DOUBLE);
                     updateHologram(victim, kind, hp == null ? 0 : hp, max == null ? 1 : max);
+                    dismountKing(plugin, victim);
                 } else {
                     updateHologram(victim, kind, 0, 1);
                 }
@@ -151,6 +152,27 @@ public final class MobListener implements Listener {
         }
     }
 
+    private static void dismountKing(RitualPlugin plugin, LivingEntity king) {
+        String id = king.getPersistentDataContainer().get(
+                plugin.getKey("king-sheep"),
+                PersistentDataType.STRING
+        );
+
+        if (id == null) return;
+
+        try {
+            Entity entity = plugin.getServer().getEntity(UUID.fromString(id));
+
+            if (entity != null) {
+                entity.removePassenger(king);
+                entity.remove();
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        king.getPersistentDataContainer().remove(plugin.getKey("king-sheep"));
+    }
+
     private void healLynx(LivingEntity victim, double pct) {
         Double hp = victim.getPersistentDataContainer().get(plugin.getKey("sb-hp"), PersistentDataType.DOUBLE);
         Double max = victim.getPersistentDataContainer().get(plugin.getKey("sb-max"), PersistentDataType.DOUBLE);
@@ -216,6 +238,7 @@ public final class MobListener implements Listener {
                 } catch (IllegalArgumentException ignored) {
                 }
             }, 12L);
+            MobFactory.removeNameHider(plugin, victim);
         }
         MythoKind kind = MythoKind.valueOf(kindName);
 
@@ -336,8 +359,7 @@ public final class MobListener implements Listener {
         Integer hits = victim.getPersistentDataContainer().get(plugin.getKey("king-shield"), PersistentDataType.INTEGER);
         boolean tagged = Boolean.TRUE.equals(victim.getPersistentDataContainer()
                 .get(plugin.getKey("shuriken"), PersistentDataType.BOOLEAN));
-        // Force the health line at 0 so SBO's healthRegex sees a Diana death.
-        int shownHits = hp <= 0 ? -1 : (hits == null ? -1 : hits);
+        int shownHits = kind == MythoKind.KING && hits != null && hits > 0 ? hits : -1;
         stand.customName(MobFactory.hologramName(kind, griffin, hp, max, shownHits, tagged));
     }
 
@@ -355,6 +377,7 @@ public final class MobListener implements Listener {
                 }
             }
         }, 12L);
+        MobFactory.removeNameHider(plugin, living);
         if (Boolean.TRUE.equals(living.getPersistentDataContainer().get(plugin.getKey("resolved"), PersistentDataType.BOOLEAN))) {
             return;
         }

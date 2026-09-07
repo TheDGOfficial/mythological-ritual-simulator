@@ -3,6 +3,8 @@ package dev.practice.ritual.ritual;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.annotation.Nullable;
+
 public enum GriffinRarity {
     COMMON("Celestial", List.of(MythoKind.HUNTER, MythoKind.LYNX)),
     UNCOMMON("Blessed", List.of(MythoKind.HUNTER, MythoKind.LYNX, MythoKind.NYMPH, MythoKind.BULL)),
@@ -14,6 +16,9 @@ public enum GriffinRarity {
             MythoKind.HARPY, MythoKind.GAIA, MythoKind.MINOTAUR, MythoKind.CHAMPION,
             MythoKind.INQUISITOR, MythoKind.SPHINX)),
     MYTHIC("Empyrean", List.of(MythoKind.values()));
+
+    @Nullable
+    public static MythoKind forcedNextSpawn;
 
     public final String prefix;
     private final List<MythoKind> pool;
@@ -32,6 +37,12 @@ public enum GriffinRarity {
      * Elusive mobs (inq/sphinx/manti/king) can be scaled by {@code elusiveMult}.
      */
     public MythoKind roll(double elusiveMult) {
+        if (forcedNextSpawn != null) {
+            MythoKind forced = forcedNextSpawn;
+            forcedNextSpawn = null;
+            return forced;
+        }
+
         List<MythoKind> pool = MYTHIC.pool;
         int total = 0;
         int[] w = new int[pool.size()];

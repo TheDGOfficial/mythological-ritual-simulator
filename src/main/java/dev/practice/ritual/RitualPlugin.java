@@ -4,6 +4,7 @@ import dev.practice.ritual.command.MiscCommands;
 import dev.practice.ritual.command.RitualCommand;
 import dev.practice.ritual.command.SetStatCommand;
 import dev.practice.ritual.command.WarpCommand;
+import dev.practice.ritual.command.ForceSpawnCommand;
 import dev.practice.ritual.craft.AnvilGui;
 import dev.practice.ritual.economy.ItemsGui;
 import dev.practice.ritual.economy.TradesGui;
@@ -70,6 +71,9 @@ public final class RitualPlugin extends JavaPlugin implements Listener {
         this.warps = new WarpCommand(this);
         bind("warp", warps, warps);
         bind("hubwarp", warps, warps);
+
+        ForceSpawnCommand forceSpawn = new ForceSpawnCommand();
+        bind("forcespawn", forceSpawn, forceSpawn);
 
         bindStat("setmagicfind", SetStatCommand.Kind.MAGIC_FIND);
         bindStat("settracking", SetStatCommand.Kind.TRACKING);

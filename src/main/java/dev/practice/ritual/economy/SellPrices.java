@@ -61,7 +61,7 @@ public final class SellPrices {
         if (n.contains("hilt")) return BY_ID.get("HILT");
         if (n.contains("wool")) return BY_ID.get("SHIMMERING_WOOL");
         if (n.contains("crown")) return BY_ID.get("CROWN");
-        if (n.contains("daedalus")) return BY_ID.get("DAEDALUS_STICK");
+        if (n.contains("daedalus stick")) return BY_ID.get("DAEDALUS_STICK");
         if (n.contains("relic")) return BY_ID.get("MINOS_RELIC");
         if (n.contains("brain")) return BY_ID.get("BRAIN_FOOD");
         if (n.contains("souvenir")) return BY_ID.get("SOUVENIR");

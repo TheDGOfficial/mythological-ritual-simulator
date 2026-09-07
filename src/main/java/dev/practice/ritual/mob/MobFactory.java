@@ -7,7 +7,11 @@ import dev.practice.ritual.ritual.MythoKind;
 import dev.practice.ritual.ritual.RitualManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ArmorStand;
@@ -20,11 +24,13 @@ import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.Sheep;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Locale;
+import java.util.UUID;
 
 public final class MobFactory {
 
@@ -59,6 +65,7 @@ public final class MobFactory {
         }
         if (kind == MythoKind.KING) {
             entity.getPersistentDataContainer().set(plugin.getKey("king-shield"), PersistentDataType.INTEGER, 75);
+            mountKing(plugin, entity);
         }
         return entity;
     }
@@ -77,7 +84,17 @@ public final class MobFactory {
         if (raw != null && LivingEntity.class.isAssignableFrom(raw)) {
             @SuppressWarnings("unchecked")
             Class<? extends LivingEntity> cls = (Class<? extends LivingEntity>) raw;
-            entity = loc.getWorld().spawn(loc, cls);
+            entity = loc.getWorld().spawn(loc, cls, e -> {
+                if (kind.rare()) {
+                    e.customName(
+                            LegacyComponentSerializer.legacySection().deserialize(kind.display)
+                    );
+                    attachNameHider(plugin, e);
+                } else {
+                    e.customName(null);
+                }
+                e.setCustomNameVisible(false);
+            });
         } else {
             entity = (LivingEntity) loc.getWorld().spawnEntity(loc, type);
         }
@@ -86,8 +103,43 @@ public final class MobFactory {
         return entity;
     }
 
+    private static void attachNameHider(RitualPlugin plugin, LivingEntity entity) {
+        ArmorStand hider = entity.getWorld().spawn(entity.getLocation(), ArmorStand.class, h -> {
+            h.setInvisible(true);
+            h.setMarker(true);
+            h.setGravity(false);
+            h.setInvulnerable(true);
+            h.setCollidable(false);
+        });
+
+        entity.addPassenger(hider);
+
+        entity.getPersistentDataContainer().set(
+                plugin.getKey("name-hider"),
+                PersistentDataType.STRING,
+                hider.getUniqueId().toString()
+        );
+    }
+
+    public static void removeNameHider(RitualPlugin plugin, LivingEntity entity) {
+        String id = entity.getPersistentDataContainer().get(
+                plugin.getKey("name-hider"),
+                PersistentDataType.STRING
+        );
+        if (id == null) return;
+
+        try {
+            Entity hider = plugin.getServer().getEntity(java.util.UUID.fromString(id));
+            if (hider != null) {
+                hider.remove();
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        entity.getPersistentDataContainer().remove(plugin.getKey("name-hider"));
+    }
+
     private static void configure(RitualPlugin plugin, LivingEntity entity, MythoKind kind, Player player, GriffinRarity griffin, double hpScale) {
-        entity.customName(null);
         entity.setCustomNameVisible(false);
         entity.setRemoveWhenFarAway(false);
         entity.setPersistent(true);
@@ -167,6 +219,14 @@ public final class MobFactory {
             mob.setTarget(player);
             mob.setAware(true);
         }
+        if (kind == MythoKind.HUNTER) {
+            entity.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+            entity.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+            entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+        }
+        if (kind == MythoKind.KING) {
+            entity.getEquipment().setItemInMainHand(new ItemStack(Material.FISHING_ROD));
+        }
 
         double hp = kind.health(griffin) * hpScale;
         var pdc = entity.getPersistentDataContainer();
@@ -178,6 +238,23 @@ public final class MobFactory {
         pdc.set(plugin.getKey("hitters"), PersistentDataType.STRING, player.getUniqueId().toString());
         pdc.set(plugin.getKey("spawn-at"), PersistentDataType.LONG, System.currentTimeMillis());
         pdc.set(plugin.getKey("dmg-mult"), PersistentDataType.DOUBLE, 1.0);
+    }
+
+    private static void mountKing(RitualPlugin plugin, LivingEntity king) {
+        Sheep sheep = king.getWorld().spawn(king.getLocation(), Sheep.class, entity -> {
+            entity.setColor(DyeColor.ORANGE);
+            entity.setInvulnerable(true);
+            entity.setCollidable(true);
+            entity.setSilent(false);
+        });
+
+        sheep.addPassenger(king);
+
+        king.getPersistentDataContainer().set(
+                plugin.getKey("king-sheep"),
+                PersistentDataType.STRING,
+                sheep.getUniqueId().toString()
+        );
     }
 
     private static void zero(LivingEntity entity, Attribute attr) {
@@ -218,14 +295,26 @@ public final class MobFactory {
 
     public static void removeHologram(RitualPlugin plugin, LivingEntity entity) {
         String id = entity.getPersistentDataContainer().get(plugin.getKey("hologram"), PersistentDataType.STRING);
-        if (id == null) return;
-        try {
-            Entity e = plugin.getServer().getEntity(java.util.UUID.fromString(id));
-            if (e != null) e.remove();
-        } catch (IllegalArgumentException i) {
-            i.printStackTrace();
+        if (id != null) {
+            try {
+                Entity e = plugin.getServer().getEntity(UUID.fromString(id));
+                if (e != null) e.remove();
+            } catch (IllegalArgumentException i) {
+                i.printStackTrace();
+            }
+            entity.getPersistentDataContainer().remove(plugin.getKey("hologram"));
         }
-        entity.getPersistentDataContainer().remove(plugin.getKey("hologram"));
+
+        String hiderId = entity.getPersistentDataContainer().get(plugin.getKey("name-hider"), PersistentDataType.STRING);
+        if (hiderId != null) {
+            try {
+                Entity e = plugin.getServer().getEntity(UUID.fromString(hiderId));
+                if (e != null) e.remove();
+            } catch (IllegalArgumentException i) {
+                i.printStackTrace();
+            }
+            entity.getPersistentDataContainer().remove(plugin.getKey("name-hider"));
+        }
     }
 
     public static double hologramOffset(MythoKind kind) {
@@ -243,8 +332,7 @@ public final class MobFactory {
     public static Component hologramName(MythoKind kind, GriffinRarity griffin, double hp, double max, int kingHits, boolean tagged) {
         String tag = tagged ? " §6✯" : "";
         if (kind == MythoKind.KING && kingHits > 0) {
-            return LegacyComponentSerializer.legacySection()
-                    .deserialize("§6King Minos §7- §5" + kingHits + " Hits" + tag);
+            return Component.text(kingHits + " Hits", NamedTextColor.DARK_PURPLE);
         }
         String shown = compact(hp);
         String cap = compact(max);
