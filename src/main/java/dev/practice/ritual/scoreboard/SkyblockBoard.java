@@ -17,6 +17,18 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+
+//honestly not sure why i put this here, first thing i clicked on with the import already in it i guess
+public class JoinListener extends JavaPlugin implements Listener {
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        var player = event.getPlayer();
+        
+        player.sendMessage("§eUse '§a/items' §eto claim additional items like the §5Four-Eyed Fish§e, §9Looting Books§e, and §9Shurikens§e.");
+    }
+}
+
 public final class SkyblockBoard implements Listener {
     private final RitualPlugin plugin;
 
