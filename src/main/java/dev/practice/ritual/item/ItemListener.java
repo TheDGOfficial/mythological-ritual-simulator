@@ -416,7 +416,7 @@ public final class ItemListener implements Listener {
             refreshTagHologram(living);
             if (proj.getShooter() instanceof Player player) {
                 player.playSound(living.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.6f);
-                player.sendMessage("§aTagged! §6+5% ✯ Magic Find §aon this mob.");
+                player.sendMessage("§aTagged! §b+5% ✯ Magic Find §aon this mob.");
             }
         }
         proj.remove();

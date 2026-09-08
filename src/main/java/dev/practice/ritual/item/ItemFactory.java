@@ -235,7 +235,9 @@ public final class ItemFactory {
                     noItalic(Component.text("Throw at an enemy to tag them.", NamedTextColor.GRAY)),
                     noItalic(Component.text("Tagged enemies grant ", NamedTextColor.GRAY)
                             .append(Component.text("+5% ✯ Magic Find", NamedTextColor.AQUA))),
-                    noItalic(Component.text("when killed and show §6✯ §7on their name.", NamedTextColor.GRAY)),
+                    noItalic(Component.text("when killed and show ", NamedTextColor.GRAY)
+                            .append(Component.text("✯", NamedTextColor.AQUA))
+                            .append(Component.text("on their name.", NamedTextColor.GRAY))),
                     noItalic(Component.text("Cooldown: ", NamedTextColor.DARK_GRAY)
                             .append(Component.text("1s", NamedTextColor.GREEN))),
                     Component.empty(),
