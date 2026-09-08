@@ -26,7 +26,7 @@ public final class PlayerStats {
     public static final double CAP_DEFENSE = CAP;
     public static final double CAP_MANA = CAP;
     public static final double CAP_MF = CAP;
-    public static final double CAP_TRACKING = CAP;
+    public static final double CAP_TRACKING = 50000;
     public static final double CAP_DAMAGE = CAP;
 
     public void clamp() {
@@ -55,7 +55,7 @@ public final class PlayerStats {
     }
 
     public void regenHealth() {
-        health = Math.min(maxHealth, health + maxHealth * 0.02);
+        health = Math.min(maxHealth, health + maxHealth * 0.04);
     }
 
     /** SkyBlock: taken = raw * 100 / (def + 100) */
