@@ -9,9 +9,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ArmorStand;
@@ -220,9 +223,28 @@ public final class MobFactory {
             mob.setAware(true);
         }
         if (kind == MythoKind.HUNTER) {
-            entity.getEquipment().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-            entity.getEquipment().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-            entity.getEquipment().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+            ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+            LeatherArmorMeta chestplateMeta = (LeatherArmorMeta) chestplate.getItemMeta();
+            chestplateMeta.setColor(Color.RED);
+            chestplateMeta.addEnchant(Enchantment.PROTECTION, 1, true);
+            chestplate.setItemMeta(chestplateMeta);
+
+            ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+            LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) leggings.getItemMeta();
+            leggingsMeta.setColor(Color.RED);
+            leggingsMeta.addEnchant(Enchantment.PROTECTION, 1, true);
+            leggings.setItemMeta(leggingsMeta);
+
+            ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+            LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
+            bootsMeta.setColor(Color.GRAY);
+            bootsMeta.addEnchant(Enchantment.PROTECTION, 1, true);
+            boots.setItemMeta(bootsMeta);
+
+            entity.getEquipment().setChestplate(chestplate);
+            entity.getEquipment().setLeggings(leggings);
+            entity.getEquipment().setBoots(boots);
+            entity.getEquipment().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD));
         }
         if (kind == MythoKind.KING) {
             entity.getEquipment().setItemInMainHand(new ItemStack(Material.FISHING_ROD));
@@ -329,6 +351,19 @@ public final class MobFactory {
         return hologramName(kind, griffin, hp, max, kingHits, false);
     }
 
+    private static final String MYTHOLOGICAL = "§2✿";
+
+    /**
+     * Hypixel uses this with their custom resourcepack to display the actual icon, SBO depends on it to show the mob HP overlay.
+     * We need to embed it so that SBO can detect the nametag, but since we do not have the resourcepack it will show as an ugly missing unicode icon without the pack.
+     */
+    private static final String MYTHOLOGICAL_RESOURCEPACK = "";
+
+    private static final String HUMANOID = "§e✰";
+    private static final String AQUATIC = "§9⚓";
+    private static final String ANIMAL = "§a☮";
+    private static final String ELUSIVE = "§d❃";
+
     public static Component hologramName(MythoKind kind, GriffinRarity griffin, double hp, double max, int kingHits, boolean tagged) {
         String tag = tagged ? " §b✯" : "";
         if (kind == MythoKind.KING && kingHits > 0) {
@@ -336,8 +371,24 @@ public final class MobFactory {
         }
         String shown = compact(hp);
         String cap = compact(max);
-        String raw = "§e[Lv" + levelFor(kind) + "] §2" + griffin.prefix + " §2 " + kind.display
-                + " §a" + shown + "§f/" + cap + "§c❤" + tag;
+        var type = MYTHOLOGICAL;
+        if (kind == MythoKind.INQUISITOR || kind == MythoKind.SPHINX || kind == MythoKind.KING) {
+            type += HUMANOID + ELUSIVE;
+        }
+        else if (kind == MythoKind.NYMPH) {
+            type += AQUATIC + HUMANOID;
+        }
+        else if (kind == MythoKind.HARPY) {
+            type += HUMANOID + ANIMAL;
+        }
+        else if (kind == MythoKind.MANTICORE) {
+            type += ANIMAL + ELUSIVE;
+        }
+        else if (kind == MythoKind.MINOTAUR || kind == MythoKind.CHAMPION) {
+            type += HUMANOID;
+        }
+        String raw = "§8[§7Lv" + levelFor(kind) + "§8] §2" + MYTHOLOGICAL_RESOURCEPACK + type + " §2" + griffin.prefix + " " + kind.display
+                + " §a" + shown + "§f/§a" + cap + "§c❤" + tag;
         return LegacyComponentSerializer.legacySection().deserialize(raw);
     }
 
