@@ -524,7 +524,7 @@ public final class ItemFactory {
                     "§egive it this item!",
                     "",
                     "§9§lRARE PET ITEM"
-            }, false);
+            }, true);
             case "DAEDALUS_STICK" -> new Skin("§6Daedalus Stick", new String[]{
                     "§7Drops rare off of Minotaurs from",
                     "§7Diana's Mythological Ritual.",

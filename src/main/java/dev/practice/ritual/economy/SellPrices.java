@@ -20,7 +20,7 @@ public final class SellPrices {
         add("CRETAN_URN", "Cretan Urn", Material.DECORATED_POT, 250_000);
         add("SHELMET", "Dwarf Turtle Shelmet", Material.TURTLE_HELMET, 250_000);
         add("PLUSHIE", "Crochet Tiger Plushie", Material.TOTEM_OF_UNDYING, 250_000);
-        add("REMEDIES", "Antique Remedies", Material.GLISTERING_MELON_SLICE, 250_000);
+        add("REMEDIES", "Antique Remedies", Material.AZURE_BLUET, 250_000);
         add("MYTHOS_FRAGMENT", "Mythos Fragment", Material.PRISMARINE_SHARD, 25_000);
         add("HILT", "Hilt of Revelations", Material.STICK, 150_000);
         add("SHIMMERING_WOOL", "Shimmering Wool", Material.YELLOW_WOOL, 50_000_000);
