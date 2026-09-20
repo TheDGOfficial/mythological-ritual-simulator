@@ -20,8 +20,8 @@ tasks {
         minecraftVersion("26.2")
 
         downloadPlugins {
-            hangar("ViaVersion", "5.12.0")
-            hangar("ViaBackwards", "5.12.0-SNAPSHOT+625")
+            hangar("ViaVersion", "5.12.1-SNAPSHOT+1065")
+            hangar("ViaBackwards", "5.12.1-SNAPSHOT+631")
             hangar("BlockReports", "2.1")
         }
     }
